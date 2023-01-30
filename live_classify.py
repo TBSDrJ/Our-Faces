@@ -1,4 +1,4 @@
-from time import sleep
+import time
 from subprocess import run
 from random import randrange, choice
 
@@ -19,9 +19,10 @@ if not cap.isOpened():
 else:
     print("Opened camera.")
 
-sleep(1)
+time.sleep(1)
 
 frames = 0
+start = time.time()
 while True:
     ret, img = cap.read()
     if ret: 
@@ -35,9 +36,10 @@ while True:
     predictions = model(img_array).numpy()
     predictions = list(predictions[0])
     prediction = predictions.index(max(predictions))
+    fps = frames / (time.time() - start)
     cv2.putText(
         img, 
-        f"{class_labels[prediction]}", 
+        f"{fps:0f} fps, {class_labels[prediction]}", 
         (10,30), 
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7, 
