@@ -3,3 +3,6 @@
 images/**
 checkpoints*/**
 zips/**
+*_save/**
+tmp/**
+images2/**
