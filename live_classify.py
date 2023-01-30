@@ -39,7 +39,7 @@ while True:
     fps = frames / (time.time() - start)
     cv2.putText(
         img, 
-        f"{fps:0f} fps, {class_labels[prediction]}", 
+        f"{fps:0.0f} fps, {class_labels[prediction]}", 
         (10,30), 
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7, 
