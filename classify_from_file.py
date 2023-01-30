@@ -4,15 +4,17 @@ import tensorflow as tf
 from subprocess import run
 from random import randrange, choice
 
-model = models.load_model('faces_model_save')
+load_path = 'faces_model_save'
+model = models.load_model(load_path)
 
-proc = run(['ls', 'images'], capture_output = True)
-class_labels = sorted(proc.stdout.decode().split())
+with open(f'{load_path}/class_names.data', 'rb') as f:
+    class_names = pickle.load(f)
+print(class_names)
 
 correct = 0
 num_test_images = 50
 for i in range(num_test_images):
-    person = choice(class_labels)
+    person = choice(class_names)
     img_num = randrange(100)
     img = utils.load_img(
         f'images/{person}/img_{img_num}.jpg',
@@ -23,8 +25,8 @@ for i in range(num_test_images):
     predictions = model(img_array).numpy()
     predictions = list(predictions[0])
     prediction = predictions.index(max(predictions))
-    print(f"{person} {class_labels[prediction]}")
-    if person == class_labels[prediction]:
+    print(f"{person} {class_names[prediction]}")
+    if person == class_names[prediction]:
         correct += 1
 
 print(f"Number of test images: {num_test_images}, Correct: {correct}, % correct: {correct/num_test_images * 100:.0f}%")

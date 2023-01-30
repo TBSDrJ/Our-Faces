@@ -1,15 +1,20 @@
 import time
+import pickle
 from subprocess import run
 from random import randrange, choice
+from pprint import pprint
 
 import cv2
 import tensorflow.keras.models as models
 import tensorflow.keras.utils as utils
 import tensorflow as tf
 
-proc = run(['ls', 'images'], capture_output = True)
-class_labels = sorted(proc.stdout.decode().split())
-model = models.load_model('faces_model_save')
+load_path = 'faces_model_save'
+model = models.load_model(load_path)
+
+with open(f'{load_path}/class_names.data', 'rb') as f:
+    class_names = pickle.load(f)
+print(class_names)
 
 cap = cv2.VideoCapture(0)
 
@@ -39,14 +44,14 @@ while True:
     fps = frames / (time.time() - start)
     cv2.putText(
         img, 
-        f"{fps:0.0f} fps, {class_labels[prediction]}", 
+        f"{fps:0.0f} fps, {class_names[prediction]}", 
         (10,30), 
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7, 
         (0, 255, 0),
         2
     )
-    print(f"{frames:5} {class_labels[prediction]:10}", end=" ")
+    print(f"{frames:5} {class_names[prediction]:10}", end=" ")
     if frames % 5 == 0:
         print()
     cv2.imshow("Camera Feed", img)

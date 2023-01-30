@@ -1,3 +1,5 @@
+import pickle
+from pprint import pprint
 import tensorflow.keras.utils as utils
 from tensorflow.keras import Sequential
 import tensorflow.keras.layers as layers
@@ -23,6 +25,9 @@ test = utils.image_dataset_from_directory(
     validation_split = 0.3, 
     subset = 'validation',
 )
+
+print("Class Names:")
+pprint(train.class_names)
 
 class Net():
     def __init__(self, input_shape):
@@ -94,4 +99,7 @@ net.model.fit(
     validation_batch_size = 32,
 )
 
-net.model.save('faces_model_save')
+save_path = 'faces_model_save'
+net.model.save(save_path)
+with open(f'{save_path}/class_names.data', 'wb') as f:
+    pickle.dump(train.class_names, f)
