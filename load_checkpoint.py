@@ -80,21 +80,22 @@ net = Net((250, 250, 3))
 print(net)
 
 checkpoint = Checkpoint(net.model)
-checkpoint.restore('checkpoints10')
+checkpoint.restore('checkpoints/checkpoints10')
 
 callbacks = [
     callbacks.ModelCheckpoint(
-        'checkpoints2{epoch:02d}', 
-        verbose = 1, 
-        save_freq = 80
+        'checkpoints/checkpoints_{epoch:02d}', 
+        verbose = 2, 
+        save_freq = 76,
     )
 ]
 net.model.fit(
     train,
     batch_size = 32,
-    epochs = 10,
+    epochs = 40,
     verbose = 2,
     validation_data = test,
     validation_batch_size = 32,
-    callbacks = callbacks
+    callbacks = callbacks,
+    initial_epoch = 20,
 )
