@@ -5,6 +5,7 @@ from tensorflow.keras import Sequential
 import tensorflow.keras.layers as layers
 import tensorflow.keras.losses as losses
 import tensorflow.keras.optimizers as optimizers
+import tensorflow.keras.callbacks as callbacks
 
 train = utils.image_dataset_from_directory(
     'images',
@@ -90,11 +91,25 @@ class Net():
 net = Net((250, 250, 3))
 print(net)
 
+callbacks = [
+    callbacks.ModelCheckpoint(
+        'checkpoints/checkpoints_{epoch:02d}', 
+        verbose = 2, 
+        save_freq = 76,
+    )
+]
+
 net.model.fit(
     train,
     batch_size = 32,
-    epochs = 40,
+    epochs = 20,
     verbose = 2,
     validation_data = test,
     validation_batch_size = 32,
+    callbacks = callbacks,
 )
+
+save_path = 'saves/faces_model_save_2023_02_05__20_epochs'
+net.model.save(save_path)
+with open(f'{save_path}/class_names.data', 'wb') as f:
+    pickle.dump(train.class_names, f)
