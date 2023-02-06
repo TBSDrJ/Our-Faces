@@ -37,6 +37,9 @@ test = utils.image_dataset_from_directory(
     subset = 'validation',
 )
 
+print("Class Names:")
+pprint(train.class_names)
+
 class Net():
     def __init__(self, image_size):
         self.model = models.Sequential()
@@ -99,3 +102,8 @@ net.model.fit(
     callbacks = callbacks,
     initial_epoch = 20,
 )
+
+save_path = 'saves/faces_model_save_2023_02_05__40_epochs'
+net.model.save(save_path)
+with open(f'{save_path}/class_names.data', 'wb') as f:
+    pickle.dump(train.class_names, f)
