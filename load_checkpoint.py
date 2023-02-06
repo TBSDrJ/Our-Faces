@@ -80,7 +80,7 @@ net = Net((250, 250, 3))
 print(net)
 
 checkpoint = Checkpoint(net.model)
-checkpoint.restore('checkpoints/checkpoints10')
+checkpoint.restore('checkpoints/checkpoints_20')
 
 callbacks = [
     callbacks.ModelCheckpoint(
