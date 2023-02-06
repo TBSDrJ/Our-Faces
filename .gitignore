@@ -1,8 +1,8 @@
 **/.DS_Store
-*.out
-images/**
 checkpoints*/**
-zips/**
-*_save/**
-tmp/**
+images/**
 images2/**
+outputs/**
+saves/**
+tmp/**
+zips/**
