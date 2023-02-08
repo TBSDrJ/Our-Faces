@@ -9,7 +9,7 @@ import tensorflow.keras.models as models
 import tensorflow.keras.utils as utils
 import tensorflow as tf
 
-load_path = 'faces_model_save'
+load_path = 'saves/faces_model_save'
 model = models.load_model(load_path)
 
 with open(f'{load_path}/class_names.data', 'rb') as f:
