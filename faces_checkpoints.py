@@ -30,6 +30,7 @@ test = utils.image_dataset_from_directory(
 
 print("Class Names:")
 pprint(train.class_names)
+class_names = train.class_names
 
 train = train.cache().prefetch(buffer_size = data.AUTOTUNE)
 test = test.cache().prefetch(buffer_size = data.AUTOTUNE)
@@ -116,4 +117,4 @@ net.model.fit(
 save_path = 'saves/faces_model_save_2023_02_08__40_epochs'
 net.model.save(save_path)
 with open(f'{save_path}/class_names.data', 'wb') as f:
-    pickle.dump(train.class_names, f)
+    pickle.dump(class_names, f)
