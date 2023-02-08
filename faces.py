@@ -5,6 +5,7 @@ from tensorflow.keras import Sequential
 import tensorflow.keras.layers as layers
 import tensorflow.keras.losses as losses
 import tensorflow.keras.optimizers as optimizers
+import tensorflow.data as data
 
 train = utils.image_dataset_from_directory(
     'images',
@@ -29,6 +30,9 @@ test = utils.image_dataset_from_directory(
 print("Class Names:")
 pprint(train.class_names)
 
+train = train.cache().prefetch(buffer_size = data.AUTOTUNE)
+test = test.cache().prefetch(buffer_size = data.AUTOTUNE)
+
 class Net():
     def __init__(self, input_shape):
         self.model = Sequential()
@@ -40,7 +44,6 @@ class Net():
             13, # kernel
             strides = 3, # a.k.a. step size
             activation = 'relu',
-            input_shape = input_shape,
         )) # Output: 80 x 80 x 8
         self.model.add(layers.MaxPool2D(
             pool_size = 2,
