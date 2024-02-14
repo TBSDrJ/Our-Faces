@@ -13,6 +13,8 @@ import tensorflow as tf
 import numpy as np
 import cv2
 
+SZ = 250
+
 train = utils.image_dataset_from_directory(
     'images',
     labels = 'inferred',
@@ -20,7 +22,7 @@ train = utils.image_dataset_from_directory(
     class_names = None,
     color_mode = 'rgb',
     batch_size = 32,
-    image_size = (250, 250),
+    image_size = (SZ, SZ),
     shuffle = True,
     seed = 8008,
     validation_split = 0.3,
@@ -34,7 +36,7 @@ test = utils.image_dataset_from_directory(
     class_names = None,
     color_mode = 'rgb',
     batch_size = 32,
-    image_size = (250, 250),
+    image_size = (SZ, SZ),
     shuffle = True,
     seed = 8008,
     validation_split = 0.3,
@@ -55,7 +57,7 @@ pprint(class_names)
 class Net():
     def __init__(self, image_size):
         self.model = models.Sequential()
-        # Input: 250 x 250 x 3
+        # Input: SZ x SZ x 3
         # First layer is convolution with:
         # Frame/kernel: 13 x 13, Stride: 3 x 3, Depth: 8
         self.model.add(layers.Conv2D(8, 13, strides = 3,
@@ -72,9 +74,11 @@ class Net():
         self.model.add(layers.MaxPool2D(pool_size = 2))
         # Output: 19 x 19 x 16
         # Now, flatten
+        self.model.add(layers.Dropout(0.3))
         self.model.add(layers.Flatten())
         # Output length: 5776
         self.model.add(layers.Dense(1024, activation = 'relu'))
+        self.model.add(layers.Dropout(0.3))
         self.model.add(layers.Dense(256, activation = 'relu'))
         self.model.add(layers.Dense(64, activation = 'relu'))
         # Softmax activation will turn values into probabilities
@@ -95,17 +99,18 @@ class Net():
 for person in class_names:
     # Get the first image of that person and set it up
     img = cv2.imread(f'images/{person}/img_0.jpg')
-    img = cv2.resize(img, (250, 250))
+    img = cv2.resize(img, (SZ, SZ))
     img = utils.img_to_array(img)
     img = img[tf.newaxis, ...]
 
     # Did checkpoints every 2 epochs up to 40.
-    for k in range(2, 42, 2):
+    #   or every 4 epochs up to 80 or every 8 up to 200 or every 10 to 380.
+    for k in range(10, 321, 10):
         # Set up the architecture and load in the checkpoint weights
-        net = Net((250, 250, 3))
+        net = Net((SZ, SZ, 3))
         # print(net)
         checkpoint = Checkpoint(net.model)
-        checkpoint.restore(f'checkpoints/checkpoints_{k:02d}').expect_partial()
+        checkpoint.restore(f'checkpoints/checkpoint_5_{k:02d}').expect_partial()
         # Get the first conv layer, feed the image and set it up for viewing
         filters = net.model.layers[0](img)[0]
         shape = filters.shape

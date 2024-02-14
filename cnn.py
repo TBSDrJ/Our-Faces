@@ -90,7 +90,10 @@ class Net():
         return ""
 
 net = Net((250, 250, 3))
-print(net)
+# print(net)
+
+print(type(train))
+quit()
 
 # callbacks = [
 #     callbacks.ModelCheckpoint(
